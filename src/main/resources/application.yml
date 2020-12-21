@@ -1,0 +1,119 @@
+spring:
+  profiles:
+    active:  dev
+camel:  springboot:    main-run-controller: true
+        shutdown-timeout: 2
+    
+---
+
+spring:
+  profiles: mock
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/localDB
+    username: 
+    password: 
+  mail:
+    host: 
+    port: 
+    username: 
+    password: 
+    properties.mail.smtp.auth: true
+    properties.mail.smtp.starttls.enable: true
+    
+mailto: 
+mailfrom:       
+      
+startRoute: direct:input
+fromRoute: file:data/input?delete=true&readLock=none&moveFailed=error
+toRoute1: mock:output
+toRoute2: jdbc:dataSource
+toRoute3: file:data/output?fileName=Success.txt
+
+
+message: Mock environment
+---
+
+spring:
+  profiles: dev
+  datasource:
+    driver-class-name: org.gjt.mm.mysql.Driver
+    url: jdbc:mysql://localhost:3306/localDB
+    username: 
+    password: 
+  mail:
+    host: 
+    port:
+    username: 
+    password: 
+    properties.mail.smtp.auth: true
+    properties.mail.smtp.starttls.enable: true
+    
+mailto: 
+mailfrom: 
+startRoute: timer:hello?period=10s
+fromRoute: file:data/input?delete=true&readLock=none&moveFailed=error
+toRoute1: file:data/output
+toRoute2: jdbc:dataSource
+toRoute3: file:data/output?fileName=Success.txt
+
+message: Dev environment
+  
+---
+spring:
+  profiles: stage
+  datasource:
+    driver-class-name: 
+    url: jdbc:mysql://localhost:3306/localDB
+    username: 
+    password: 
+    
+  mail:
+    host: 
+    port:
+    username: 
+    password: 
+    properties.mail.smtp.auth: true
+    properties.mail.smtp.starttls.enable: true
+    
+mailto: 
+mailfrom:
+
+startRoute: timer:hello?period=10s
+fromRoute: file:data/input?delete=true&readLock=none&moveFailed=error
+toRoute1: file:data/output
+toRoute2: jdbc:dataSource
+toRoute3: file:data/output?fileName=Success.txt
+
+message: Stage environment
+  
+---
+
+spring:
+  profiles: prod
+  datasource:
+     driver-class-name: org.gjt.mm.mysql.Driver
+     url: jdbc:mysql://localhost:3306/localDB
+     username: 
+     password: 
+    
+  mail:
+    host: 
+    port:
+    username: 
+    password: 
+    properties.mail.smtp.auth: true
+    properties.mail.smtp.starttls.enable: true
+    
+mailTo: 
+mailfrom: 
+  
+startRoute: timer:hello?period=10s
+fromRoute: file:data/input?delete=true&readLock=none&moveFailed=error
+toRoute1: file:data/output
+toRoute2: jdbc:dataSource
+toRoute3: file:data/output?fileName=Success.txt
+
+message: Prod environment
+  
+---
